@@ -7,7 +7,7 @@ using JustSaying.Messaging.MessageHandling;
 using JustSaying.Messaging.MessageSerialisation;
 using JustSaying.Messaging.Monitoring;
 using JustSaying.Models;
-using NLog;
+using Common.Logging;
 
 namespace JustSaying
 {
@@ -27,7 +27,7 @@ namespace JustSaying
         }
         public IMessageSerialisationRegister SerialisationRegister { get; private set; }
         public IMessageLock MessageLock { get; set; }
-        private static readonly Logger Log = LogManager.GetLogger("JustSaying"); //ToDo: danger!
+        private static readonly ILog Log = LogManager.GetLogger("JustSaying"); //ToDo: danger!
         private readonly object _syncRoot = new object();
 
         public JustSayingBus(IMessagingConfig config, IMessageSerialisationRegister serialisationRegister)
@@ -137,7 +137,7 @@ namespace JustSaying
             {
                 activeRegion = Config.GetActiveRegion();
             }
-            Log.Info("Active region has been evaluated to {0}", activeRegion);
+            Log.InfoFormat("Active region has been evaluated to {0}", activeRegion);
 
             if (!_publishersByRegionAndTopic.ContainsKey(activeRegion))
             {
@@ -180,7 +180,7 @@ namespace JustSaying
                 {
                     Monitor.IssuePublishingMessage();
 
-                    Log.ErrorException(string.Format("Unable to publish message {0}", message.GetType().Name), ex);
+                    Log.Error(string.Format("Unable to publish message {0}", message.GetType().Name), ex);
                     throw;
                 }
 

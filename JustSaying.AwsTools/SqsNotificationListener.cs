@@ -4,7 +4,7 @@ using System.Linq;
 using Amazon.SQS.Model;
 using JustSaying.Messaging.MessageProcessingStrategies;
 using JustSaying.Messaging.Monitoring;
-using NLog;
+using Common.Logging;
 using Newtonsoft.Json.Linq;
 using JustSaying.Messaging;
 using JustSaying.Messaging.MessageHandling;
@@ -23,7 +23,7 @@ namespace JustSaying.AwsTools
         private readonly IMessageLock _messageLock;
 
         private bool _listen = true;
-        private static readonly Logger Log = LogManager.GetLogger("JustSaying");
+        private static readonly ILog Log = LogManager.GetLogger("JustSaying");
 
         private const int MaxAmazonMessageCap = 10;
         private IMessageProcessingStrategy _messageProcessingStrategy;
@@ -126,11 +126,11 @@ namespace JustSaying.AwsTools
             }
             catch (InvalidOperationException ex)
             {
-                Log.Trace("Suspected no message in queue {0}. Ex: {1}", _queue.QueueName, ex);
+                Log.TraceFormat("Suspected no message in queue {0}. Ex: {1}", _queue.QueueName, ex);
             }
             catch (Exception ex)
             {
-                Log.ErrorException(string.Format("Issue in message handling loop for queue {0}", _queue.QueueName), ex);
+                Log.Error(string.Format("Issue in message handling loop for queue {0}", _queue.QueueName), ex);
             }
         }
 
@@ -190,7 +190,7 @@ namespace JustSaying.AwsTools
             }
             catch (KeyNotFoundException ex)
             {
-                Log.Trace("Didn't handle message {0}. No serialiser setup", rawMessage ?? "");
+                Log.TraceFormat("Didn't handle message {0}. No serialiser setup", rawMessage ?? "");
                 _queue.Client.DeleteMessage(new DeleteMessageRequest
                 {
                     QueueUrl = _queue.Url,
@@ -200,7 +200,7 @@ namespace JustSaying.AwsTools
             }
             catch (Exception ex)
             {
-                Log.ErrorException(string.Format("Issue handling message... {0}. StackTrace: {1}", message, ex.StackTrace), ex);
+                Log.Error(string.Format("Issue handling message... {0}. StackTrace: {1}", message, ex.StackTrace), ex);
                 if (typedMessage != null)
                 {
                     _messagingMonitor.HandleException(typedMessage.GetType().Name);

@@ -5,13 +5,13 @@ using System.Threading;
 using Amazon.SQS;
 using Amazon.SQS.Model;
 using JustSaying.AwsTools.QueueCreation;
-using NLog;
+using Common.Logging;
 
 namespace JustSaying.AwsTools
 {
     public abstract class SqsQueueByNameBase : SqsQueueBase
     {
-        private static readonly Logger Log = LogManager.GetLogger("JustSaying");
+        private static readonly ILog Log = LogManager.GetLogger("JustSaying");
 
         public SqsQueueByNameBase(string queueName, IAmazonSQS client)
             : base(client)
@@ -69,14 +69,14 @@ namespace JustSaying.AwsTools
                 else
                 {
                     // Throw all errors which are not delete timeout related.
-                    Log.ErrorException(string.Format("Create Queue error: {0}", QueueName), ex);
+                    Log.Error(string.Format("Create Queue error: {0}", QueueName), ex);
                     throw;
                 }
 
                 // If we're on a delete timeout, throw after 2 attempts.
                 if (attempt >= 2)
                 {
-                    Log.ErrorException(string.Format("Create Queue error, max retries exceeded for delay - Queue: {0}", QueueName), ex);
+                    Log.Error(string.Format("Create Queue error, max retries exceeded for delay - Queue: {0}", QueueName), ex);
                     throw;
                 }
             }

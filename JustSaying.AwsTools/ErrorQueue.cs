@@ -7,7 +7,7 @@ using Amazon.SQS;
 using Amazon.SQS.Model;
 using Amazon.SQS.Util;
 using JustSaying.AwsTools.QueueCreation;
-using NLog;
+using Common.Logging;
 
 namespace JustSaying.AwsTools
 {
