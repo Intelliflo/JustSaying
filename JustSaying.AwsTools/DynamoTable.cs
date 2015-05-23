@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.Model;
-using NLog;
+using Common.Logging;
 
 namespace JustSaying.AwsTools
 {
@@ -9,7 +9,7 @@ namespace JustSaying.AwsTools
     {
         private readonly DynamoDbConfig _config;
         private readonly IAmazonDynamoDB _client;
-        private static readonly Logger Log = LogManager.GetCurrentClassLogger();
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
         private readonly string[] _expectedErrorCodesForConcurrentCalls = new[] { "ResourceInUseException", "ThrottlingException" };
 
         public DynamoTable(DynamoDbConfig config, IAmazonDynamoDB client)
@@ -68,7 +68,7 @@ namespace JustSaying.AwsTools
                             TableName = tableName
                         });
 
-                    Log.Info("Dynamo Table name: {0}, status: {1}",
+                    Log.InfoFormat("Dynamo Table name: {0}, status: {1}",
                                       res.Table.TableName,
                                       res.Table.TableStatus);
                     status = res.Table.TableStatus;

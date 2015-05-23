@@ -1,14 +1,14 @@
 using Amazon.SimpleNotificationService;
 using Amazon.SimpleNotificationService.Model;
 using JustSaying.Messaging.MessageSerialisation;
-using NLog;
+using Common.Logging;
 
 namespace JustSaying.AwsTools
 {
     public class SnsTopicByName : SnsTopicBase
     {
         public string TopicName { get; private set; }
-        private static readonly Logger Log = LogManager.GetLogger("JustSaying");
+        private static readonly ILog Log = LogManager.GetLogger("JustSaying");
 
         public SnsTopicByName(string topicName, IAmazonSimpleNotificationService client, IMessageSerialisationRegister serialisationRegister)
             : base(serialisationRegister)

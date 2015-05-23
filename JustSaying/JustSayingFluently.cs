@@ -9,7 +9,7 @@ using JustSaying.Messaging.MessageHandling;
 using JustSaying.Messaging.MessageSerialisation;
 using JustSaying.Messaging.Monitoring;
 using JustSaying.Models;
-using NLog;
+using Common.Logging;
 using JustSaying.Lookups;
 
 namespace JustSaying
@@ -24,7 +24,7 @@ namespace JustSaying
     /// </summary>
     public class JustSayingFluently : ISubscriberIntoQueue, IHaveFulfilledSubscriptionRequirements, IHaveFulfilledPublishRequirements, IMayWantOptionalSettings, IMayWantARegionPicker
     {
-        private static readonly Logger Log = LogManager.GetLogger("JustSaying"); // ToDo: Dangerous!
+        private static readonly ILog Log = LogManager.GetLogger("JustSaying"); // ToDo: Dangerous!
         private readonly IVerifyAmazonQueues _amazonQueueCreator;
         protected readonly IAmJustSaying Bus;
         private SqsReadConfiguration _subscriptionConfig = new SqsReadConfiguration(SubscriptionType.ToTopic);

@@ -4,7 +4,7 @@ using Amazon.SimpleNotificationService.Model;
 using Amazon.SQS;
 using JustSaying.Messaging;
 using JustSaying.Messaging.MessageSerialisation;
-using NLog;
+using Common.Logging;
 using Message = JustSaying.Models.Message;
 
 namespace JustSaying.AwsTools
@@ -14,8 +14,8 @@ namespace JustSaying.AwsTools
         private readonly IMessageSerialisationRegister _serialisationRegister; // ToDo: Grrr...why is this here even. GET OUT!
         public string Arn { get; protected set; }
         public IAmazonSimpleNotificationService Client { get; protected set; }
-        private static readonly Logger EventLog = LogManager.GetLogger("EventLog");
-        private static readonly Logger Log = LogManager.GetLogger("JustSaying");
+        private static readonly ILog EventLog = LogManager.GetLogger("EventLog");
+        private static readonly ILog Log = LogManager.GetLogger("JustSaying");
 
         public SnsTopicBase(IMessageSerialisationRegister serialisationRegister)
         {
@@ -55,7 +55,7 @@ namespace JustSaying.AwsTools
                                    TopicArn = Arn
                                });
 
-            EventLog.Info("Published message: '{0}' with content {1}", messageType, messageToSend);
+            EventLog.InfoFormat("Published message: '{0}' with content {1}", messageType, messageToSend);
         }
     }
 }
