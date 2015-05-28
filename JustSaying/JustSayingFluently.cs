@@ -43,10 +43,11 @@ namespace JustSaying
             return new SqsSubscribtionEndpointProvider(subscriptionConfig);
         }
 
+        /*
         public virtual IPublishSubscribtionEndpointProvider CreateSqsSubscriptionEndpointProvider(SqsReadConfiguration subscriptionConfig)
         {
             return new SqsSubscribtionEndpointProvider(subscriptionConfig);
-        }
+        }*/
 
         public virtual IPublishEndpointProvider CreatePublisherEndpointProvider(SqsReadConfiguration subscriptionConfig)
         {
@@ -102,9 +103,10 @@ namespace JustSaying
             configBuilder(config);
 
             var messageTypeName = typeof(T).Name.ToLower();
-            var queueName = string.IsNullOrWhiteSpace(config.QueueName)
+            var queueName = config.QueueName;
+                /*string.IsNullOrWhiteSpace(config.QueueName)
                 ? messageTypeName
-                : messageTypeName + "-" + config.QueueName;
+                : messageTypeName + "-" + config.QueueName;*/
             _publishConfig.QueueName = queueName;
 
             var publishEndpointProvider = CreatePublisherEndpointProvider(_publishConfig);
@@ -200,7 +202,7 @@ namespace JustSaying
 
         public IFluentSubscription IntoQueue(string queuename)
         {
-            _subscriptionConfig.QueueName = queuename;
+            _subscriptionConfig.QueueName = queuename.ToLower();
             return this;
         }
 
@@ -318,15 +320,16 @@ namespace JustSaying
 
         private void ConfigureSqsSubscription(string messageTypeName)
         {
-            var queueName = string.IsNullOrWhiteSpace(_subscriptionConfig.QueueName)
+            //var queueName = messageTypeName;
+                /*string.IsNullOrWhiteSpace(_subscriptionConfig.QueueName)
                 ? messageTypeName
-                : messageTypeName + "-" + _subscriptionConfig.QueueName;
-            _subscriptionConfig.QueueName = queueName;
+                : messageTypeName + "-" + _subscriptionConfig.QueueName;*/
+            //_subscriptionConfig.QueueName = queueName;
             _subscriptionConfig.ValidateSqsConfiguration();
 
-            var subscriptionEndpointProvider = CreateSqsSubscriptionEndpointProvider(_subscriptionConfig);
-            var locationName = subscriptionEndpointProvider.GetLocationName();
-            _subscriptionConfig.QueueName = locationName;
+            //var subscriptionEndpointProvider = CreateSqsSubscriptionEndpointProvider(_subscriptionConfig);
+            //var locationName = subscriptionEndpointProvider.GetLocationName();
+            //_subscriptionConfig.QueueName = locationName;
         }
 
         #endregion
