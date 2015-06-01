@@ -19,7 +19,10 @@ namespace JustSaying.AwsTools.QueueCreation
         }
 
         internal SubscriptionType SubscriptionType { get; private set; }
+
+        internal string BaseQueueName { get; set; }
         internal string QueueName { get; set; }
+
         internal string Topic { get; set; }
         internal string PublishEndpoint { get; set; }
 

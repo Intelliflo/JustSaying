@@ -6,10 +6,14 @@ namespace JustSaying
 {
     public static class CreateMeABus
     {
-        public static IMayWantOptionalSettings InRegion(string region)
+        public static IMayWantOptionalSettings InRegion(params string[] regions)
         {
             var config = new MessagingConfig();
-            config.Regions.Add(region);
+
+            foreach (var region in regions)
+            {
+                config.Regions.Add(region);
+            }
 
             config.Validate();
 
