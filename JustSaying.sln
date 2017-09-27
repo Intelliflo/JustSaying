@@ -1,15 +1,22 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSaying.AwsTools", "JustSaying.AwsTools\JustSaying.AwsTools.csproj", "{CBF2110B-C3A4-45E8-BBD6-301D77567043}"
+	ProjectSection(ProjectDependencies) = postProject
+		{899CD315-37B3-46D0-B2DC-FB94C552D968} = {899CD315-37B3-46D0-B2DC-FB94C552D968}
+		{A9FD2BAC-5B4B-4408-9253-16813BC87727} = {A9FD2BAC-5B4B-4408-9253-16813BC87727}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSaying.AwsTools.UnitTests", "JustSaying.AwsTools.UnitTests\JustSaying.AwsTools.UnitTests.csproj", "{D5F19B9D-F761-4300-A9A1-2A1352CEEB8F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSaying.AwsTools.IntegrationTests", "JustSaying.AwsTools.IntegrationTests\JustSaying.AwsTools.IntegrationTests.csproj", "{23E76404-BE2D-4A2A-952B-2683780E1565}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSaying.Messaging", "JustSaying.Messaging\JustSaying.Messaging.csproj", "{899CD315-37B3-46D0-B2DC-FB94C552D968}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A9FD2BAC-5B4B-4408-9253-16813BC87727} = {A9FD2BAC-5B4B-4408-9253-16813BC87727}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JustSaying.Messaging.UnitTests", "JustSaying.Messaging.UnitTests\JustSaying.Messaging.UnitTests.csproj", "{7E36099E-E6A4-4259-973C-0ABE776377BA}"
 EndProject
