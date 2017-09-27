@@ -99,7 +99,7 @@ pipeline {
                         delegate.changeset = changeset
                         delegate.stageName = stageName
                         abortOnFailure = true
-
+                        logVerbose = verboseLogging
                     }
 
                     semanticVersion = Consul.getStoreValue(ConsulKey.get(env.githubRepoName, env.BRANCH_NAME, globals.CHANGE_ID, 'existing.version'))
