@@ -186,7 +186,7 @@ pipeline {
 
                     findAndDeleteOldPackages {
                         credentialsId = artifactoryCredentialsId
-                        packageName = "${changeset.repoName}.${semanticVersion}"
+                        packageName = "JustSayingIflo.${semanticVersion}"
                         latestBuildNumber = globals.BUILD_NUMBER
                         repos = 'nuget-local'
                         url = artifactoryUri
@@ -234,9 +234,10 @@ pipeline {
                 script {
                     stageName = 'Production'
 
-                    validateMasterSha {
+                    validateBaseBranchSha {
                         repoName = changeset.repoName
-                        packageMasterSha = changeset.masterSha
+                        baseBranch = changeset.baseBranch
+                        packageSha = changeset.baseBranchSha
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
                     }
@@ -276,7 +277,7 @@ pipeline {
 
                         updateJiraOnMerge {
                             issueKey = changeset.jiraTicket
-                            packageName = changeset.repoName
+                            packageName = "JustSayingIflo"
                             version = packageVersion
                             credentialsId = jiraCredentialsId
                             logVerbose = verboseLogging
