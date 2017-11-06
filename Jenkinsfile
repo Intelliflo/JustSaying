@@ -6,7 +6,7 @@
 /**
  * By default the master branch of the library is loaded
  * Use the include directive below ONLY if you need to load a branch of the library
- * @Library('intellifloworkflow@IP-6920')
+ * @Library('intellifloworkflow@IP-25369')
  */
 import org.intelliflo.*
 
@@ -99,6 +99,7 @@ pipeline {
                         delegate.changeset = changeset
                         delegate.stageName = stageName
                         abortOnFailure = true
+                        logVerbose = verboseLogging
                     }
 
                     semanticVersion = Consul.getStoreValue(ConsulKey.get(env.githubRepoName, env.BRANCH_NAME, globals.CHANGE_ID, 'existing.version'))
@@ -127,6 +128,7 @@ pipeline {
                         sha = changeset.commitSha
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
+                        targetsFile = "version.justsaying.targets"
                     }
 
                     buildSolution {
@@ -141,7 +143,10 @@ pipeline {
                     def unitTestResults = runUnitTests {
                         title = "Unit Tests"
                         withCoverage = true
-                        include = "test\\${globals.solutionName}.Tests\\bin\\Release\\${globals.solutionName}.Tests.dll"
+                        runner = "${pwd()}\\packages\\NUnit.ConsoleRunner.3.2.1\\tools\\nunit3-console.exe"
+                        options = "--framework=4.0 --result=dist\\UnitTestResults.xml;format=nunit2"
+                        recurse = true
+                        include = "\\bin\\Release\\*UnitTests.dll"
                         unitTestsResultsFilename = "UnitTestResults"
                         coverageInclude = globals.solutionName
                         coverageResultsFilename = "OpenCoverResults"
@@ -169,18 +174,19 @@ pipeline {
                         delegate.stageName = stageName
                     }
 
-                    nugetPack {
-                        fileSpec = "src\\*.csproj"
+                    createNugetPackages {
+                        createSubsysJsonFile = false
+                        updateModConfigJsonFile = false
                         version = packageVersion
-                        configuration = 'Release'
                         artifactFolder = 'dist'
+                        stashPackages = false
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
                     }
 
                     findAndDeleteOldPackages {
                         credentialsId = artifactoryCredentialsId
-                        packageName = "${changeset.repoName}.${semanticVersion}"
+                        packageName = "JustSayingIflo.${semanticVersion}"
                         latestBuildNumber = globals.BUILD_NUMBER
                         repos = 'nuget-local'
                         url = artifactoryUri
@@ -210,6 +216,7 @@ pipeline {
             post {
                 always {
                     script {
+                        archive excludes: 'dist/*.zip,dist/*.nupkg,dist/*.md5', includes: 'dist/*.*'
                         deleteWorkspace {
                             force = true
                         }
@@ -227,9 +234,10 @@ pipeline {
                 script {
                     stageName = 'Production'
 
-                    validateMasterSha {
+                    validateBaseBranchSha {
                         repoName = changeset.repoName
-                        packageMasterSha = changeset.masterSha
+                        baseBranch = changeset.baseBranch
+                        packageSha = changeset.baseBranchSha
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
                     }
@@ -269,7 +277,7 @@ pipeline {
 
                         updateJiraOnMerge {
                             issueKey = changeset.jiraTicket
-                            packageName = changeset.repoName
+                            packageName = "JustSayingIflo"
                             version = packageVersion
                             credentialsId = jiraCredentialsId
                             logVerbose = verboseLogging
