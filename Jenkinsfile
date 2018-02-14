@@ -176,7 +176,7 @@ pipeline {
 
                     if (changeset.pullRequest != null) {
                         nugetPack {
-                            fileSpec = "*.nuspec"
+                            fileSpec = "JustSayingIflo.nuspec"
                             version = packageVersion
                             configuration = 'Release'
                             artifactFolder = 'dist'
@@ -200,7 +200,7 @@ pipeline {
                     }
 
                     nugetPack {
-                        fileSpec = "*.nuspec"
+                        fileSpec = "JustSayingIflo.nuspec"
                         version = "${packageVersion}-alpha"
                         configuration = 'Release'
                         artifactFolder = 'dist'
