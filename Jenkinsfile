@@ -6,7 +6,7 @@
 /**
  * By default the master branch of the library is loaded
  * Use the include directive below ONLY if you need to load a branch of the library
- * @Library('intellifloworkflow@IP-25369')
+ * @Library('intellifloworkflow@IP-32917')
  */
 import org.intelliflo.*
 
@@ -174,15 +174,52 @@ pipeline {
                         delegate.stageName = stageName
                     }
 
+                    if (changeset.pullRequest != null) {
+                        nugetPack {
+                            fileSpec = "JustSayingIflo.nuspec"
+                            version = packageVersion
+                            configuration = 'Release'
+                            artifactFolder = 'dist'
+                            stashPackages  = true
+                            stashName = 'package'
+                            logVerbose = verboseLogging
+                            delegate.stageName = stageName
+                        }
+                        /*
+                        createNugetPackages {
+                            createSubsysJsonFile = false
+                            updateModConfigJsonFile = false
+                            version = packageVersion
+                            artifactFolder = 'dist'
+                            stashPackages  = true
+                            stashName = 'package'
+                            logVerbose = verboseLogging
+                            delegate.stageName = stageName
+                        }
+                        */
+                    }
+
+                    nugetPack {
+                        fileSpec = "JustSayingIflo.nuspec"
+                        version = "${packageVersion}-alpha"
+                        configuration = 'Release'
+                        artifactFolder = 'dist'
+                        stashPackages  = false
+                        logVerbose = verboseLogging
+                        delegate.stageName = stageName
+                    }
+
+                    /*
                     createNugetPackages {
                         createSubsysJsonFile = false
                         updateModConfigJsonFile = false
-                        version = packageVersion
+                        version = "${packageVersion}-alpha"
                         artifactFolder = 'dist'
                         stashPackages = false
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
                     }
+                    */
 
                     findAndDeleteOldPackages {
                         credentialsId = artifactoryCredentialsId
@@ -204,8 +241,8 @@ pipeline {
                     publishPackages {
                         credentialsId = artifactoryCredentialsId
                         repo = 'nuget-local'
-                        version = packageVersion
-                        include = "*.nupkg"
+                        version = "${packageVersion}-alpha"
+                        include = "JustSayingIflo.${packageVersion}-alpha.nupkg"
                         uri = artifactoryUri
                         properties = propset
                         logVerbose = verboseLogging
@@ -216,7 +253,6 @@ pipeline {
             post {
                 always {
                     script {
-                        archive excludes: 'dist/*.zip,dist/*.nupkg,dist/*.md5', includes: 'dist/*.*'
                         deleteWorkspace {
                             force = true
                         }
@@ -275,6 +311,22 @@ pipeline {
                             stashName = 'ResourceFiles'
                         }
 
+                        bat "if not exist dist\\NUL (mkdir dist)"
+                        dir('dist') {
+                            unstash 'package'
+                        }
+
+                        publishPackages {
+                            credentialsId = artifactoryCredentialsId
+                            repo = 'nuget-local'
+                            version = packageVersion
+                            include = "*.${packageVersion}.nupkg"
+                            uri = artifactoryUri
+                            properties = "github.pr.number=${changeset.prNumber} git.repo.name=${changeset.repoName} git.master.mergebase=${changeset.masterSha} jira.ticket=${changeset.jiraTicket}"
+                            logVerbose = verboseLogging
+                            delegate.stageName = stageName
+                        }
+
                         updateJiraOnMerge {
                             issueKey = changeset.jiraTicket
                             packageName = "JustSayingIflo"
@@ -309,6 +361,12 @@ pipeline {
                         consulBuildKey = changeset.consulBuildKey
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
+                    }
+
+                    deleteGithubBranch {
+                        repoName = changeset.repoName
+                        branchName = changeset.originatingBranch
+                        logVerbose = verboseLogging
                     }
                 }
             }
