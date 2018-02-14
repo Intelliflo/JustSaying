@@ -175,6 +175,17 @@ pipeline {
                     }
 
                     if (changeset.pullRequest != null) {
+                        nugetPack {
+                            fileSpec = "*.nuspec"
+                            version = packageVersion
+                            configuration = 'Release'
+                            artifactFolder = 'dist'
+                            stashPackages  = true
+                            stashName = 'package'
+                            logVerbose = verboseLogging
+                            delegate.stageName = stageName
+                        }
+                        /*
                         createNugetPackages {
                             createSubsysJsonFile = false
                             updateModConfigJsonFile = false
@@ -185,8 +196,20 @@ pipeline {
                             logVerbose = verboseLogging
                             delegate.stageName = stageName
                         }
+                        */
                     }
 
+                    nugetPack {
+                        fileSpec = "*.nuspec"
+                        version = "${packageVersion}-alpha"
+                        configuration = 'Release'
+                        artifactFolder = 'dist'
+                        stashPackages  = false
+                        logVerbose = verboseLogging
+                        delegate.stageName = stageName
+                    }
+
+                    /*
                     createNugetPackages {
                         createSubsysJsonFile = false
                         updateModConfigJsonFile = false
@@ -196,6 +219,7 @@ pipeline {
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
                     }
+                    */
 
                     findAndDeleteOldPackages {
                         credentialsId = artifactoryCredentialsId
