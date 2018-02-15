@@ -185,18 +185,6 @@ pipeline {
                             logVerbose = verboseLogging
                             delegate.stageName = stageName
                         }
-                        /*
-                        createNugetPackages {
-                            createSubsysJsonFile = false
-                            updateModConfigJsonFile = false
-                            version = packageVersion
-                            artifactFolder = 'dist'
-                            stashPackages  = true
-                            stashName = 'package'
-                            logVerbose = verboseLogging
-                            delegate.stageName = stageName
-                        }
-                        */
                     }
 
                     nugetPack {
@@ -208,18 +196,6 @@ pipeline {
                         logVerbose = verboseLogging
                         delegate.stageName = stageName
                     }
-
-                    /*
-                    createNugetPackages {
-                        createSubsysJsonFile = false
-                        updateModConfigJsonFile = false
-                        version = "${packageVersion}-alpha"
-                        artifactFolder = 'dist'
-                        stashPackages = false
-                        logVerbose = verboseLogging
-                        delegate.stageName = stageName
-                    }
-                    */
 
                     findAndDeleteOldPackages {
                         credentialsId = artifactoryCredentialsId
@@ -325,6 +301,14 @@ pipeline {
                             properties = "github.pr.number=${changeset.prNumber} git.repo.name=${changeset.repoName} git.master.mergebase=${changeset.masterSha} jira.ticket=${changeset.jiraTicket}"
                             logVerbose = verboseLogging
                             delegate.stageName = stageName
+                        }
+
+                        deletePackage {
+                            repo = 'nuget-local'
+                            packages = ["JustSayingIflo"]
+                            version = "${packageVersion}-alpha"
+                            credentialsId = artifactoryCredentialsId
+                            uri = artifactoryUri
                         }
 
                         updateJiraOnMerge {
