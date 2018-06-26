@@ -1,5 +1,5 @@
 /**
- * JenkinsFile for the pipeline of JustSaying projects
+ * JenkinsFile for the pipeline of Reference Package projects
  * ~~ MANAGED BY DEVOPS ~~
  */
 
@@ -155,6 +155,19 @@ pipeline {
                         runtime = pipelineRuntime
                         credentialsId = artifactoryCredentialsId
                         uri = artifactoryUri
+                    }
+                }
+            }
+            post {
+                always {
+                    script {
+                        pipelineRuntime = addTimings {
+                            runtime = pipelineRuntime
+                        }
+                        
+                        deleteWorkspace {
+                            force = true
+                        }
                     }
                 }
             }
