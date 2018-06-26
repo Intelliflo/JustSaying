@@ -1,6 +1,31 @@
 ---
-logVerbose: false
+logVerbose: true
+solutionName: JustSaying
+displayName: JustSaying
+hasSubSystemTests: false
+versionTargetsFile: version.justsaying.targets
+unitTestsInclude: '**/bin/Release/*UnitTests.dll'
 projectsToBuild:
 - projectFile: JustSaying.sln
   buildTool: MSBuild 14.0
   arguments: /m /p:Configuration=Release;TargetFrameworkVersion=v4.5.2 /clp:ErrorsOnly
+codeQuality:
+  resharperInspectCode:
+    run: true
+  sonarQube:
+    run: true
+scan:
+  whiteSource:
+    run: false
+  dependencyCheck:
+    run: false
+packaging:
+  isReferencePackage: true
+  configuration: Release
+  fileSpec: JustSayingIflo.nuspec
+  createSubsysJsonFile: false
+  updateModConfigJsonFile: false
+  allPackages:
+    - JustSayingIflo
+  buildPackages:
+    - JustSayingIflo
