@@ -2,6 +2,7 @@
 logVerbose: true
 solutionName: JustSaying
 displayName: JustSaying
+baseBranch: iflo_nuget
 hasSubSystemTests: false
 versionTargetsFile: version.justsaying.targets
 unitTestsInclude: '**/bin/Release/*UnitTests.dll'

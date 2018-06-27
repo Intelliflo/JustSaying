@@ -143,6 +143,12 @@ pipeline {
                             stashName = 'ResourceFiles'
                         }
 
+                        pipelineRuntime = publishPackages {
+                            runtime = pipelineRuntime
+                            credentialsId = artifactoryCredentialsId
+                            uri = artifactoryUri
+                        }
+
                         updateJiraOnMerge {
                             runtime = pipelineRuntime
                             credentialsId = jiraCredentialsId
