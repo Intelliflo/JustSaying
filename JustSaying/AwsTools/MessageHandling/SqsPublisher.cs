@@ -26,7 +26,7 @@ namespace JustSaying.AwsTools.MessageHandling
         public void Publish(Message message)
         {
             var request = BuildSendMessageRequest(message);
-            Console.WriteLine("In SqsPublisher - DEBUG")
+            Console.WriteLine("In SqsPublisher - DEBUG");
             try
             {
                 _client.SendMessage(request);
