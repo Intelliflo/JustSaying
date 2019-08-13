@@ -21,11 +21,16 @@ namespace JustSaying.AwsTools.MessageHandling
 
         public void Publish(Message message)
         {
-            _client.SendMessage(new SendMessageRequest
+            var request = new SendMessageRequest
             {
                 MessageBody = GetMessageInContext(message),
                 QueueUrl = Url
-            });
+            };
+
+            if (message.DelaySeconds.HasValue)
+                request.DelaySeconds = message.DelaySeconds.Value;
+
+            _client.SendMessage(request);
         }
 
         public string GetMessageInContext(Message message)
